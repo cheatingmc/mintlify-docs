@@ -12,7 +12,8 @@
     "pages": [
       "index",
       "quickstart",
-      "development"
+      "development",
+      "api"
     ]
   },
   "logo": {
