@@ -1,0 +1,108 @@
+---
+title: API reference
+description: Access Nice Alts programmatically
+---
+
+## Authentication
+
+All requests require an API key as a query parameter:
+
+```bash
+?key=YOUR_API_KEY
+```
+
+Generate your key using `/api-key` in Discord.
+
+## Base URL
+
+```
+https://api.nicealts.com
+```
+
+## Endpoints
+
+<Card title="GET /v1/stock" icon="box">
+  Get current stock and prices
+</Card>
+
+**Parameters**
+
+- `key` (required) - Your API key
+
+**Response**
+
+```json
+{
+  "products": [
+    {
+      "id": "Ban (AccessToken)",
+      "price": 1,
+      "stock": 0
+    },
+    {
+      "id": "Unban (AccessToken)",
+      "price": 5,
+      "stock": 48
+    }
+  ]
+}
+```
+
+<Card title="GET /v1/generate" icon="sparkles">
+  Purchase accounts
+</Card>
+
+**Parameters**
+
+- `key` (required) - Your API key
+- `type` (required) - `banned` or `unbanned`
+- `amount` (optional) - Number of accounts (default: 1)
+- `precheck` (optional) - `none` or `full` (default: none)
+
+**Response**
+
+```
+account_token_1
+account_token_2
+```
+
+Plain text, one account per line.
+
+## Examples
+
+<CodeGroup>
+
+```python Python
+import requests
+
+response = requests.get(
+    "https://api.nicealts.com/v1/generate",
+    params={
+        "key": "YOUR_API_KEY",
+        "type": "banned",
+        "amount": 1,
+        "precheck": "full"
+    }
+)
+accounts = response.text.strip().split('\n')
+```
+
+```javascript JavaScript
+fetch('https://api.nicealts.com/v1/generate?key=YOUR_API_KEY&type=banned&amount=1&precheck=full')
+  .then(res => res.text())
+  .then(text => {
+    const accounts = text.trim().split('\n');
+  });
+```
+
+</CodeGroup>
+
+## Errors
+
+| Code | Description |
+|------|-------------|
+| 400 | Invalid parameters |
+| 401 | Invalid API key |
+| 402 | Insufficient credits |
+| 404 | Product out of stock |
+| 429 | Rate limit exceeded (100/min) |
