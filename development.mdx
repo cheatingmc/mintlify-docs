@@ -1,94 +1,183 @@
 ---
-title: 'Development'
-description: 'Preview changes locally to update your docs'
+title: 'Developer guide'
+description: 'Integrate Nice Alts into your applications'
 ---
 
-<Info>
-  **Prerequisites**:
-  - Node.js version 19 or higher
-  - A docs repository with a `docs.json` file
-</Info>
+<img
+  className="block"
+  src="/dev-hero.svg"
+  alt="Developer"
+/>
 
-Follow these steps to install and run Mintlify on your operating system.
+## API integration
+
+Use our API to automate account purchases and check stock programmatically.
+
+<CardGroup cols={2}>
+  <Card title="API reference" icon="book" href="/api" color="#6B7280">
+    Complete API documentation
+  </Card>
+  <Card title="Rate limits" icon="gauge" color="#6B7280">
+    100 requests per minute per IP
+  </Card>
+</CardGroup>
+
+## Authentication
 
 <Steps>
-<Step title="Install the Mintlify CLI">
-
-```bash
-npm i -g mint
-```
-</Step>
-
-<Step title="Preview locally">
-
-Navigate to your docs directory where your `docs.json` file is located, and run the following command:
-
-```bash
-mint dev
-```
-
-A local preview of your documentation will be available at `http://localhost:3000`.
-
-</Step>
+  <Step title="Get your API key">
+    Generate an API key using the `/api-key` command in Discord.
+    
+    ```bash
+    /api-key
+    ```
+  </Step>
+  
+  <Step title="Add to requests">
+    Include your key as a query parameter in all API requests.
+    
+    ```bash
+    ?key=YOUR_API_KEY
+    ```
+  </Step>
 </Steps>
 
-## Custom ports
+<Warning>
+  Never expose your API key in client-side code or public repositories.
+</Warning>
 
-By default, Mintlify uses port 3000. You can customize the port Mintlify runs on by using the `--port` flag. For example, to run Mintlify on port 3333, use this command:
+## Quick examples
 
-```bash
-mint dev --port 3333
-```
+<Tabs>
+  <Tab title="Python" icon="python">
+    ```python
+    import requests
+    
+    API_KEY = "YOUR_API_KEY"
+    BASE_URL = "https://api.nicealts.com"
+    
+    # Check stock
+    stock = requests.get(
+        f"{BASE_URL}/v1/stock",
+        params={"key": API_KEY}
+    ).json()
+    
+    print(f"Available products: {len(stock['products'])}")
+    
+    # Purchase accounts
+    response = requests.get(
+        f"{BASE_URL}/v1/generate",
+        params={
+            "key": API_KEY,
+            "type": "unbanned",
+            "amount": 5,
+            "precheck": "full"
+        }
+    )
+    
+    accounts = response.text.strip().split('\n')
+    print(f"Purchased {len(accounts)} accounts")
+    ```
+  </Tab>
+  
+  <Tab title="JavaScript" icon="js">
+    ```javascript
+    const API_KEY = "YOUR_API_KEY";
+    const BASE_URL = "https://api.nicealts.com";
+    
+    // Check stock
+    const stock = await fetch(
+      `${BASE_URL}/v1/stock?key=${API_KEY}`
+    ).then(res => res.json());
+    
+    console.log(`Available products: ${stock.products.length}`);
+    
+    // Purchase accounts
+    const response = await fetch(
+      `${BASE_URL}/v1/generate?key=${API_KEY}&type=unbanned&amount=5&precheck=full`
+    );
+    
+    const text = await response.text();
+    const accounts = text.trim().split('\n');
+    console.log(`Purchased ${accounts.length} accounts`);
+    ```
+  </Tab>
+  
+  <Tab title="cURL" icon="terminal">
+    ```bash
+    # Check stock
+    curl "https://api.nicealts.com/v1/stock?key=YOUR_API_KEY"
+    
+    # Purchase accounts
+    curl "https://api.nicealts.com/v1/generate?key=YOUR_API_KEY&type=unbanned&amount=5&precheck=full"
+    ```
+  </Tab>
+</Tabs>
 
-If you attempt to run Mintlify on a port that's already in use, it will use the next available port:
-
-```md
-Port 3000 is already in use. Trying 3001 instead.
-```
-
-## Mintlify versions
-
-Please note that each CLI release is associated with a specific version of Mintlify. If your local preview does not align with the production version, please update the CLI:
-
-```bash
-npm mint update
-```
-
-## Validating links
-
-The CLI can assist with validating links in your documentation. To identify any broken links, use the following command:
-
-```bash
-mint broken-links
-```
-
-## Deployment
-
-If the deployment is successful, you should see the following:
-
-<Frame>
-  <img src="/images/checks-passed.png" alt="Screenshot of a deployment confirmation message that says All checks have passed." style={{ borderRadius: '0.5rem' }} />
-</Frame>
-
-## Code formatting
-
-We suggest using extensions on your IDE to recognize and format MDX. If you're a VSCode user, consider the [MDX VSCode extension](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx) for syntax highlighting, and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) for code formatting.
-
-## Troubleshooting
+## Error handling
 
 <AccordionGroup>
-  <Accordion title='Error: Could not load the "sharp" module using the darwin-arm64 runtime'>
-
-    This may be due to an outdated version of node. Try the following:
-    1. Remove the currently-installed version of the CLI: `npm remove -g mint`
-    2. Upgrade to Node v19 or higher.
-    3. Reinstall the CLI: `npm i -g mint`
+  <Accordion title="401 Unauthorized" icon="lock">
+    Your API key is invalid or missing.
+    
+    ```json
+    {"detail": "Invalid API key"}
+    ```
+    
+    **Solution:** Verify your API key is correct and included in the request.
   </Accordion>
-
-  <Accordion title="Issue: Encountering an unknown error">
   
-    Solution: Go to the root of your device and delete the `~/.mintlify` folder. Then run `mint dev` again.
+  <Accordion title="402 Payment Required" icon="credit-card">
+    Insufficient credits in your account.
+    
+    ```json
+    {"detail": "Insufficient credits"}
+    ```
+    
+    **Solution:** Add more credits to your account via Discord.
+  </Accordion>
+  
+  <Accordion title="404 Not Found" icon="circle-xmark">
+    Product is out of stock or doesn't exist.
+    
+    ```json
+    {"detail": "Product not found or out of stock"}
+    ```
+    
+    **Solution:** Check stock availability using `/v1/stock` endpoint.
+  </Accordion>
+  
+  <Accordion title="429 Too Many Requests" icon="triangle-exclamation">
+    Rate limit exceeded (100 requests/minute).
+    
+    ```json
+    {"error": "Rate limit exceeded"}
+    ```
+    
+    **Solution:** Implement exponential backoff and retry after 60 seconds.
   </Accordion>
 </AccordionGroup>
 
-Curious about what changed in the latest CLI version? Check out the [CLI changelog](https://www.npmjs.com/package/mintlify?activeTab=versions).
+## Best practices
+
+<CardGroup cols={2}>
+  <Card title="Use prechecking" icon="shield-check" color="#10B981">
+    Enable full prechecking for production to ensure account quality
+  </Card>
+  
+  <Card title="Handle errors" icon="bug" color="#EF4444">
+    Always implement proper error handling and retries
+  </Card>
+  
+  <Card title="Respect rate limits" icon="clock" color="#F59E0B">
+    Stay within 100 requests per minute to avoid throttling
+  </Card>
+  
+  <Card title="Secure your keys" icon="key" color="#6B7280">
+    Never expose API keys in client-side code
+  </Card>
+</CardGroup>
+
+<Note>
+  Need help with integration? Contact our support team on Discord.
+</Note>
