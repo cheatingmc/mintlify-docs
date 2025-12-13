@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "quill",
+  "theme": "mint",
   "name": "Nice Alts",
   "colors": {
     "primary": "#6B7280",
@@ -15,23 +15,21 @@
   "navigation": {
     "anchors": [
       {
-        "anchor": "Discord",
+        "anchor": "🎮 Discord",
         "icon": "discord",
         "href": "https://discord.gg/nicealts"
       }
     ],
     "groups": [
       {
-        "group": "Getting started",
-        "icon": "rocket",
+        "group": "🚀 Getting started",
         "pages": [
           "index",
           "faq"
         ]
       },
       {
-        "group": "API",
-        "icon": "plug",
+        "group": "⚡ API",
         "pages": [
           "api-key",
           "stock",
