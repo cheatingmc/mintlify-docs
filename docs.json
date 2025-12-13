@@ -11,21 +11,21 @@
   "navigation": {
     "anchors": [
       {
-        "anchor": "🎮 Discord",
+        "anchor": "Discord",
         "icon": "discord",
         "href": "https://discord.gg/nicealts"
       }
     ],
     "groups": [
       {
-        "group": "🚀 Getting started",
+        "group": "Getting started",
         "pages": [
           "index",
           "faq"
         ]
       },
       {
-        "group": "⚡ API",
+        "group": "API",
         "pages": [
           "api-key",
           "stock",
