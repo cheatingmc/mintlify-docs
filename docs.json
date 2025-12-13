@@ -1,25 +1,47 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "quill",
+  "name": "Nice Alts",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#6B7280",
+    "light": "#9CA3AF",
+    "dark": "#4B5563",
+    "background": {
+      "light": "#FFFFFF",
+      "dark": "#111827"
+    }
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "pages": [
-      "index",
-      "quickstart",
-      "development",
-      "api"
+    "anchors": [
+      {
+        "anchor": "Discord",
+        "icon": "discord",
+        "href": "https://discord.gg/nicealts"
+      }
+    ],
+    "groups": [
+      {
+        "group": "Getting started",
+        "icon": "rocket",
+        "pages": [
+          "index",
+          "faq"
+        ]
+      },
+      {
+        "group": "API",
+        "icon": "plug",
+        "pages": [
+          "api-key",
+          "stock",
+          "purchase",
+          "api"
+        ]
+      }
     ]
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
+
 
   "contextual": {
     "options": [

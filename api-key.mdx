@@ -1,0 +1,158 @@
+---
+title: API key
+description: Generate and manage your API key
+---
+
+## Generate your API key
+
+<Steps>
+  <Step title="Join Discord" icon="discord">
+    Make sure you're in our Discord server at discord.gg/nicealts
+  </Step>
+  
+  <Step title="Run the command" icon="terminal">
+    Use the `/api-key` command in any channel
+    
+    ```bash
+    /api-key
+    ```
+  </Step>
+  
+  <Step title="Save your key" icon="floppy-disk">
+    Copy and securely store your API key. You'll need it for all API requests.
+  </Step>
+</Steps>
+
+<Warning>
+  Your API key is sensitive. Never share it publicly or commit it to version control.
+</Warning>
+
+## Using your API key
+
+Include your API key as a query parameter in all API requests:
+
+<CodeGroup>
+
+```bash cURL
+curl "https://api.nicealts.com/v1/stock?key=YOUR_API_KEY"
+```
+
+```python Python
+import requests
+
+API_KEY = "YOUR_API_KEY"
+response = requests.get(
+    "https://api.nicealts.com/v1/stock",
+    params={"key": API_KEY}
+)
+```
+
+```javascript JavaScript
+const API_KEY = "YOUR_API_KEY";
+const response = await fetch(
+  `https://api.nicealts.com/v1/stock?key=${API_KEY}`
+);
+```
+
+</CodeGroup>
+
+## Best practices
+
+<CardGroup cols={2}>
+  <Card title="Environment variables" icon="file-code" color="#10B981">
+    Store your API key in environment variables, not in your code
+    
+    ```bash
+    export NICEALTS_API_KEY="your_key_here"
+    ```
+  </Card>
+  
+  <Card title="Never expose publicly" icon="eye-slash" color="#EF4444">
+    Don't include your API key in:
+    - Public repositories
+    - Client-side code
+    - Screenshots or videos
+  </Card>
+  
+  <Card title="Regenerate if compromised" icon="rotate" color="#F59E0B">
+    If your key is exposed, generate a new one immediately using `/api-key`
+  </Card>
+  
+  <Card title="Use .gitignore" icon="git-alt" color="#6B7280">
+    Add files containing API keys to `.gitignore`
+    
+    ```bash
+    .env
+    .env.local
+    config.json
+    ```
+  </Card>
+</CardGroup>
+
+## Example: Secure storage
+
+<Tabs>
+  <Tab title="Python" icon="python">
+    ```python
+    import os
+    from dotenv import load_dotenv
+    
+    # Load from .env file
+    load_dotenv()
+    
+    API_KEY = os.getenv("NICEALTS_API_KEY")
+    
+    if not API_KEY:
+        raise ValueError("API key not found in environment")
+    ```
+    
+    Create a `.env` file:
+    ```bash
+    NICEALTS_API_KEY=your_key_here
+    ```
+  </Tab>
+  
+  <Tab title="JavaScript" icon="js">
+    ```javascript
+    // Load from .env file
+    require('dotenv').config();
+    
+    const API_KEY = process.env.NICEALTS_API_KEY;
+    
+    if (!API_KEY) {
+      throw new Error("API key not found in environment");
+    }
+    ```
+    
+    Create a `.env` file:
+    ```bash
+    NICEALTS_API_KEY=your_key_here
+    ```
+  </Tab>
+</Tabs>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="401 Unauthorized error" icon="lock">
+    Your API key is invalid or missing. Make sure:
+    - You're using the correct key
+    - The key is included as a query parameter
+    - You haven't regenerated the key
+  </Accordion>
+  
+  <Accordion title="Can't generate a key" icon="circle-xmark">
+    Ensure you:
+    - Are in the Nice Alts Discord server
+    - Have the required permissions
+    - Are using the correct command: `/api-key`
+  </Accordion>
+  
+  <Accordion title="Need to regenerate key" icon="key">
+    Simply run `/api-key` again in Discord. Your old key will be invalidated and a new one will be generated.
+  </Accordion>
+</AccordionGroup>
+
+<Info>
+  Your API key is tied to your Discord account and credit balance. All purchases made via API will deduct from your account credits.
+</Info>

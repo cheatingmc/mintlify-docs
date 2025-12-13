@@ -1,0 +1,102 @@
+---
+title: FAQ
+description: Frequently asked questions about Nice Alts
+---
+
+## General questions
+
+<AccordionGroup>
+  <Accordion title="What is Nice Alts?" icon="circle-question">
+    Nice Alts provides premium Discord accounts with instant delivery. We offer both banned and unbanned accounts at competitive prices with reliable service.
+  </Accordion>
+  
+  <Accordion title="How do I get started?" icon="rocket">
+    1. Join our Discord server at discord.gg/nicealts
+    2. Use `/api-key` to generate your API key
+    3. Start purchasing accounts via Discord commands or API
+  </Accordion>
+  
+  <Accordion title="What payment methods do you accept?" icon="credit-card">
+    We use a credit-based system. You can purchase credits through our Discord server using various payment methods.
+  </Accordion>
+</AccordionGroup>
+
+## Account questions
+
+<AccordionGroup>
+  <Accordion title="What types of accounts do you offer?" icon="users">
+    We offer three types of accounts:
+    - **Banned accounts** (1 credit) - Access token format
+    - **Unbanned accounts** (5 credits) - Clean accounts with access tokens
+    - **Unbanned HQ** (15 credits) - Premium accounts with cookie authentication
+  </Accordion>
+  
+  <Accordion title="How quickly are accounts delivered?" icon="bolt">
+    Accounts are delivered instantly after purchase. If you enable full prechecking, delivery may take up to 30 seconds for validation.
+  </Accordion>
+  
+  <Accordion title="What is prechecking?" icon="shield-check">
+    Prechecking validates accounts before delivery:
+    - **None** - Instant delivery, no validation
+    - **Full** - All accounts validated, invalid ones automatically refunded
+    
+    We recommend full prechecking for production use.
+  </Accordion>
+  
+  <Accordion title="What if I receive an invalid account?" icon="triangle-exclamation">
+    If you use full prechecking, invalid accounts are automatically filtered out and refunded. Without prechecking, contact support on Discord for assistance.
+  </Accordion>
+</AccordionGroup>
+
+## API questions
+
+<AccordionGroup>
+  <Accordion title="How do I get an API key?" icon="key">
+    Use the `/api-key` command in our Discord server to generate your unique API key.
+  </Accordion>
+  
+  <Accordion title="What are the rate limits?" icon="gauge">
+    The API has a rate limit of 100 requests per IP per minute. If exceeded, you'll receive a 429 error and need to wait 60 seconds.
+  </Accordion>
+  
+  <Accordion title="Can I use the API for bulk purchases?" icon="boxes-stacked">
+    Yes! You can purchase up to 100 accounts per request using the `amount` parameter. For larger orders, contact us on Discord.
+  </Accordion>
+  
+  <Accordion title="Is my API key secure?" icon="lock">
+    Keep your API key private. Never expose it in client-side code or public repositories. If compromised, generate a new key immediately.
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="I'm getting a 401 error" icon="circle-xmark">
+    This means your API key is invalid or missing. Verify:
+    - Your API key is correct
+    - You're including it as a query parameter: `?key=YOUR_API_KEY`
+    - The key hasn't been regenerated
+  </Accordion>
+  
+  <Accordion title="I'm getting a 402 error" icon="wallet">
+    You have insufficient credits. Add more credits to your account through Discord.
+  </Accordion>
+  
+  <Accordion title="I'm getting a 404 error" icon="box-open">
+    The product is out of stock or doesn't exist. Check stock availability using `/stock` command or the `/v1/stock` API endpoint.
+  </Accordion>
+  
+  <Accordion title="I'm getting a 429 error" icon="clock">
+    You've exceeded the rate limit of 100 requests per minute. Wait 60 seconds before trying again and implement exponential backoff in your code.
+  </Accordion>
+</AccordionGroup>
+
+## Support
+
+<Card title="Need more help?" icon="discord" href="https://discord.gg/nicealts" color="#5865F2">
+  Join our Discord server for support
+</Card>
+
+<Note>
+  Can't find your answer? Ask in our Discord support channel and our team will help you out!
+</Note>
