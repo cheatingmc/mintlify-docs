@@ -1,0 +1,209 @@
+---
+title: Stock
+description: Check available accounts and pricing
+---
+
+## Check stock availability
+
+View current stock levels and prices for all account types.
+
+<Tabs>
+  <Tab title="Discord" icon="discord">
+    Use the `/stock` command in Discord to see available accounts:
+    
+    ```bash
+    /stock
+    ```
+    
+    You'll receive a message showing:
+    - Product names
+    - Current prices
+    - Available stock
+  </Tab>
+  
+  <Tab title="API" icon="code">
+    Make a GET request to the stock endpoint:
+    
+    ```bash
+    GET https://api.nicealts.com/v1/stock?key=YOUR_API_KEY
+    ```
+    
+    <CodeGroup>
+    
+    ```python Python
+    import requests
+    
+    response = requests.get(
+        "https://api.nicealts.com/v1/stock",
+        params={"key": "YOUR_API_KEY"}
+    )
+    
+    stock = response.json()
+    for product in stock["products"]:
+        print(f"{product['id']}: {product['stock']} available at {product['price']} credits")
+    ```
+    
+    ```javascript JavaScript
+    const response = await fetch(
+      'https://api.nicealts.com/v1/stock?key=YOUR_API_KEY'
+    );
+    
+    const stock = await response.json();
+    stock.products.forEach(product => {
+      console.log(`${product.id}: ${product.stock} available at ${product.price} credits`);
+    });
+    ```
+    
+    </CodeGroup>
+  </Tab>
+</Tabs>
+
+## Response format
+
+The API returns stock information in JSON format:
+
+```json
+{
+  "products": [
+    {
+      "id": "Ban (AccessToken)",
+      "price": 1,
+      "stock": 0
+    },
+    {
+      "id": "Unban (AccessToken)",
+      "price": 5,
+      "stock": 48
+    },
+    {
+      "id": "Unban HQ (Cookie)",
+      "price": 15,
+      "stock": 16
+    }
+  ]
+}
+```
+
+## Account types & pricing
+
+<CardGroup cols={3}>
+  <Card title="Banned accounts" icon="ban" color="#EF4444">
+    **1 credit**
+    
+    Access token format
+    
+    Product ID: `Ban (AccessToken)`
+  </Card>
+  
+  <Card title="Unbanned accounts" icon="circle-check" color="#10B981">
+    **5 credits**
+    
+    Clean with access tokens
+    
+    Product ID: `Unban (AccessToken)`
+  </Card>
+  
+  <Card title="Unbanned HQ" icon="crown" color="#F59E0B">
+    **15 credits**
+    
+    Premium with cookies
+    
+    Product ID: `Unban HQ (Cookie)`
+  </Card>
+</CardGroup>
+
+## Understanding stock levels
+
+<AccordionGroup>
+  <Accordion title="In stock" icon="circle-check">
+    Stock count is greater than 0. You can purchase accounts immediately.
+  </Accordion>
+  
+  <Accordion title="Out of stock" icon="circle-xmark">
+    Stock count is 0. The product is temporarily unavailable. Check back later or contact support for restocking information.
+  </Accordion>
+  
+  <Accordion title="Low stock" icon="triangle-exclamation">
+    Stock count is low (typically under 10). Consider purchasing soon if you need accounts.
+  </Accordion>
+</AccordionGroup>
+
+## Monitoring stock
+
+<Tabs>
+  <Tab title="Automated monitoring" icon="robot">
+    Set up automated stock monitoring with a simple script:
+    
+    ```python
+    import requests
+    import time
+    
+    API_KEY = "YOUR_API_KEY"
+    CHECK_INTERVAL = 300  # 5 minutes
+    
+    def check_stock():
+        response = requests.get(
+            "https://api.nicealts.com/v1/stock",
+            params={"key": API_KEY}
+        )
+        stock = response.json()
+        
+        for product in stock["products"]:
+            if product["stock"] > 0:
+                print(f"✅ {product['id']}: {product['stock']} in stock")
+            else:
+                print(f"❌ {product['id']}: Out of stock")
+    
+    while True:
+        check_stock()
+        time.sleep(CHECK_INTERVAL)
+    ```
+  </Tab>
+  
+  <Tab title="Discord notifications" icon="bell">
+    Stay updated by enabling notifications in our Discord server. We announce:
+    - New stock arrivals
+    - Low stock warnings
+    - Special promotions
+  </Tab>
+</Tabs>
+
+## Best practices
+
+<CardGroup cols={2}>
+  <Card title="Check before purchasing" icon="magnifying-glass" color="#6B7280">
+    Always verify stock availability before attempting bulk purchases
+  </Card>
+  
+  <Card title="Handle out of stock" icon="code" color="#6B7280">
+    Implement proper error handling for 404 responses when products are unavailable
+  </Card>
+  
+  <Card title="Cache stock data" icon="database" color="#6B7280">
+    Cache stock responses for 1-2 minutes to reduce API calls
+  </Card>
+  
+  <Card title="Monitor regularly" icon="clock" color="#6B7280">
+    Set up automated monitoring if you need accounts frequently
+  </Card>
+</CardGroup>
+
+<Note>
+  Stock levels update in real-time. The API always returns the most current availability.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Getting 401 error" icon="lock">
+    Your API key is invalid. Verify you're using the correct key from `/api-key`.
+  </Accordion>
+  
+  <Accordion title="Empty products array" icon="box-open">
+    This shouldn't happen. If you see an empty array, contact support on Discord.
+  </Accordion>
+  
+  <Accordion title="Rate limit exceeded" icon="gauge">
+    You're checking stock too frequently. Wait 60 seconds and implement caching to reduce requests.
+  </Accordion>
+</AccordionGroup>
