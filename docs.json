@@ -18,7 +18,7 @@
     ],
     "groups": [
       {
-        "group": "Getting started",
+        "group": "Getting Started",
         "pages": [
           "index",
           "faq"
@@ -29,8 +29,7 @@
         "pages": [
           "api-key",
           "stock",
-          "purchase",
-          "api"
+          "purchase"
         ]
       }
     ]
