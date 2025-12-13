@@ -13,11 +13,30 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "pages": [
-      "index",
-      "quickstart",
-      "development",
-      "api"
+    "anchors": [
+      {
+        "anchor": "Discord 💬",
+        "icon": "discord",
+        "href": "https://discord.gg/nicealts"
+      }
+    ],
+    "groups": [
+      {
+        "group": "Getting Started 🚀",
+        "pages": [
+          "index",
+          "faq"
+        ]
+      },
+      {
+        "group": "API 🔌",
+        "pages": [
+          "api-key",
+          "stock",
+          "purchase",
+          "api"
+        ]
+      }
     ]
   },
 
