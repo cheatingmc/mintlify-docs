@@ -1,35 +1,51 @@
 ---
 title: API reference
-description: Access Nice Alts programmatically
+description: Complete API documentation for Nice Alts
 ---
+
+<img
+  className="block"
+  src="/api-hero.svg"
+  alt="API"
+/>
+
+## Base URL
+
+```bash
+https://api.nicealts.com
+```
 
 ## Authentication
 
-All requests require an API key as a query parameter:
+<Card title="API key required" icon="key" color="#6B7280">
+  All requests require an API key as a query parameter
+</Card>
 
 ```bash
 ?key=YOUR_API_KEY
 ```
 
-Generate your key using `/api-key` in Discord.
+<Info>
+  Generate your API key using `/api-key` in Discord.
+</Info>
 
-## Base URL
-
-```
-https://api.nicealts.com
-```
+---
 
 ## Endpoints
 
-<Card title="GET /v1/stock" icon="box">
-  Get current stock and prices
+### GET /v1/stock
+
+<Card title="Check stock availability" icon="box" color="#6B7280">
+  Get current stock levels and prices for all products
 </Card>
 
-**Parameters**
+#### Parameters
 
-- `key` (required) - Your API key
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | string | Yes | Your API key |
 
-**Response**
+#### Response
 
 ```json
 {
@@ -43,34 +59,89 @@ https://api.nicealts.com
       "id": "Unban (AccessToken)",
       "price": 5,
       "stock": 48
+    },
+    {
+      "id": "Unban HQ (Cookie)",
+      "price": 15,
+      "stock": 16
     }
   ]
 }
 ```
 
-<Card title="GET /v1/generate" icon="sparkles">
-  Purchase accounts
+#### Example request
+
+<CodeGroup>
+
+```bash cURL
+curl "https://api.nicealts.com/v1/stock?key=YOUR_API_KEY"
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    "https://api.nicealts.com/v1/stock",
+    params={"key": "YOUR_API_KEY"}
+)
+stock = response.json()
+```
+
+```javascript JavaScript
+const response = await fetch(
+  'https://api.nicealts.com/v1/stock?key=YOUR_API_KEY'
+);
+const stock = await response.json();
+```
+
+</CodeGroup>
+
+---
+
+### GET /v1/generate
+
+<Card title="Purchase accounts" icon="sparkles" color="#6B7280">
+  Buy and receive accounts instantly via API
 </Card>
 
-**Parameters**
+#### Parameters
 
-- `key` (required) - Your API key
-- `type` (required) - `banned` or `unbanned`
-- `amount` (optional) - Number of accounts (default: 1)
-- `precheck` (optional) - `none` or `full` (default: none)
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `key` | string | Yes | - | Your API key |
+| `type` | string | Yes | - | `banned` or `unbanned` |
+| `amount` | integer | No | 1 | Number of accounts (1-100) |
+| `precheck` | string | No | `none` | `none` or `full` |
 
-**Response**
+<AccordionGroup>
+  <Accordion title="Account types" icon="list">
+    - `banned` - Maps to "Ban (AccessToken)" product (1 credit)
+    - `unbanned` - Maps to "Unban (AccessToken)" product (5 credits)
+  </Accordion>
+  
+  <Accordion title="Precheck modes" icon="shield">
+    - `none` - Instant delivery, no validation
+    - `full` - Validated accounts only, invalid ones refunded
+  </Accordion>
+</AccordionGroup>
+
+#### Response
+
+Plain text format, one account per line:
 
 ```
 account_token_1
 account_token_2
+account_token_3
 ```
 
-Plain text, one account per line.
-
-## Examples
+#### Example requests
 
 <CodeGroup>
+
+```bash cURL
+curl "https://api.nicealts.com/v1/generate?key=YOUR_API_KEY&type=unbanned&amount=5&precheck=full"
+```
 
 ```python Python
 import requests
@@ -79,30 +150,130 @@ response = requests.get(
     "https://api.nicealts.com/v1/generate",
     params={
         "key": "YOUR_API_KEY",
-        "type": "banned",
-        "amount": 1,
+        "type": "unbanned",
+        "amount": 5,
         "precheck": "full"
     }
 )
+
 accounts = response.text.strip().split('\n')
+print(f"Received {len(accounts)} accounts")
 ```
 
 ```javascript JavaScript
-fetch('https://api.nicealts.com/v1/generate?key=YOUR_API_KEY&type=banned&amount=1&precheck=full')
-  .then(res => res.text())
-  .then(text => {
-    const accounts = text.trim().split('\n');
-  });
+const response = await fetch(
+  'https://api.nicealts.com/v1/generate?key=YOUR_API_KEY&type=unbanned&amount=5&precheck=full'
+);
+
+const text = await response.text();
+const accounts = text.trim().split('\n');
+console.log(`Received ${accounts.length} accounts`);
 ```
 
 </CodeGroup>
 
-## Errors
+---
 
-| Code | Description |
-|------|-------------|
-| 400 | Invalid parameters |
-| 401 | Invalid API key |
-| 402 | Insufficient credits |
-| 404 | Product out of stock |
-| 429 | Rate limit exceeded (100/min) |
+## Error responses
+
+<AccordionGroup>
+  <Accordion title="400 Bad Request" icon="circle-exclamation">
+    Invalid parameters or missing required fields.
+    
+    ```json
+    {
+      "detail": "Type must be 'banned' or 'unbanned'"
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="401 Unauthorized" icon="lock">
+    Invalid or missing API key.
+    
+    ```json
+    {
+      "detail": "Invalid API key"
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="402 Payment Required" icon="credit-card">
+    Insufficient credits in your account.
+    
+    ```json
+    {
+      "detail": "Insufficient credits"
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="404 Not Found" icon="circle-xmark">
+    Product not found or out of stock.
+    
+    ```json
+    {
+      "detail": "Product not found or out of stock"
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="429 Too Many Requests" icon="triangle-exclamation">
+    Rate limit exceeded (100 requests per minute).
+    
+    ```json
+    {
+      "error": "Rate limit exceeded",
+      "message": "Too many requests. Please try again later."
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="500 Internal Server Error" icon="server">
+    Server error occurred.
+    
+    ```json
+    {
+      "detail": "Internal server error"
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Rate limiting
+
+<Card title="Rate limits" icon="gauge" color="#F59E0B">
+  100 requests per IP per minute
+</Card>
+
+When the rate limit is exceeded:
+- Returns `429 Too Many Requests`
+- Retry after 60 seconds
+- Implement exponential backoff in your code
+
+---
+
+## Best practices
+
+<CardGroup cols={2}>
+  <Card title="Error handling" icon="bug" color="#EF4444">
+    Always check response status codes and handle errors gracefully
+  </Card>
+  
+  <Card title="Retry logic" icon="rotate" color="#F59E0B">
+    Implement exponential backoff for failed requests
+  </Card>
+  
+  <Card title="Use prechecking" icon="shield-check" color="#10B981">
+    Enable full prechecking for production environments
+  </Card>
+  
+  <Card title="Monitor usage" icon="chart-line" color="#6B7280">
+    Track your API usage to stay within rate limits
+  </Card>
+</CardGroup>
+
+<Warning>
+  Keep your API key secure. Never expose it in client-side code or public repositories.
+</Warning>
